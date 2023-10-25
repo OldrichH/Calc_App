@@ -1,0 +1,6 @@
+﻿@model IEnumerable<Calculator_App.Models.Calculation>
+
+@foreach (Calculation item in Model)
+{
+    <p>@item.ValueA @item.Operation @item.ValueB = @item.Result</p>
+}

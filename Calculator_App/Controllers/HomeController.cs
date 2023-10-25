@@ -22,44 +22,95 @@ namespace Calculator_App.Controllers
             this.Operations = new OperationsContext();
         }
 
-        
+        //public IActionResult Index()
+        //{
+        //    Calculator c = new Calculator();
+        //    this.ViewBag.History = this.Repository.FindLatest();
+        //    this.ViewBag.checkBox = false;
+
+        //    return View(c);
+        //}
 
         public IActionResult Index()
         {
             Calculator c = new Calculator();
-            this.ViewBag.History = this.Repository.FindLatest();
-            this.ViewBag.checkBox = false;
+            //this.ViewBag.History = this.Repository.FindLatest();
+            //this.ViewBag.checkBox = false;
+            IEnumerable<Calculation> history = this.Repository.FindLatest();
 
-            return View(c);
+            return View(history);
         }
 
-        [HttpPost]
-        public IActionResult Index(Calculator c)
+        [HttpGet]
+        public IActionResult GetPartial(Calculator c)
         {
-            if (ModelState.IsValid)
+
+            double result = Operations.Calculate(c);
+
+            Calculation calc = new Calculation()
             {
-                double result = Operations.Calculate(c);
-                this.ViewBag.Result = result;
+                ValueA = c.ValueA,
+                ValueB = c.ValueB,
+                Operation = c.Operation,
+                Result = result,
+                Date = DateTime.Now
+            };
+            this.Repository.CreateRecord(calc);
 
-                Calculation calc = new Calculation()
-                {
-                    ValueA = c.ValueA,
-                    ValueB = c.ValueB,
-                    Operation = c.Operation,
-                    Result = result,
-                    Date = DateTime.Now
-                };
-                this.Repository.CreateRecord(calc);
+            IEnumerable<Calculation> history = this.Repository.FindLatest();
 
-                
-                
-             }
+            return PartialView("_HistoryViewPartial", history);
 
-            this.ViewBag.checkBox = c.ReturnInteger;
-            this.ViewBag.History = this.Repository.FindLatest();
-
-            return PartialView();
         }
+        [HttpPost]
+        public IActionResult GetResult(Calculator c)
+        {
+
+            double result = Operations.Calculate(c);
+
+            Calculation calc = new Calculation()
+            {
+                ValueA = c.ValueA,
+                ValueB = c.ValueB,
+                Operation = c.Operation,
+                Result = result,
+                Date = DateTime.Now
+            };
+            this.Repository.CreateRecord(calc);
+
+            IEnumerable<Calculation> history = this.Repository.FindLatest();
+
+            return Json(calc.Result); // dodelat json response
+
+        }
+
+        //[HttpPost]
+        //public IActionResult Index(Calculator c)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        double result = Operations.Calculate(c);
+        //        this.ViewBag.Result = result;
+
+        //        Calculation calc = new Calculation()
+        //        {
+        //            ValueA = c.ValueA,
+        //            ValueB = c.ValueB,
+        //            Operation = c.Operation,
+        //            Result = result,
+        //            Date = DateTime.Now
+        //        };
+        //        this.Repository.CreateRecord(calc);
+
+        //        return View(c);
+
+        //    }
+
+        //    this.ViewBag.checkBox = c.ReturnInteger;
+        //    this.ViewBag.History = this.Repository.FindLatest();
+
+        //    return View();
+        //}
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
