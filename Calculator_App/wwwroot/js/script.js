@@ -51,13 +51,13 @@
     const previousValueElement = document.querySelector('[data-previous]');
     const selectedOperationElement = document.querySelector('[data-operation-selected]');
     const deleteButton = document.querySelector('[data-manage]');
+
     const input = document.querySelectorAll('[data-expand]');
     const checkBox = document.getElementById("checkBox");
 
     input.forEach(input => { resize(input) });
     const calc = new Calc(previousValueElement, currentValueElement, selectedOperationElement);
 
-    //checkBox.checked = checkBox.value;
 
     numbers.forEach(button => {
         button.addEventListener('click', () => {
@@ -101,4 +101,41 @@
             checkBox.value = "True";
         }        
     });
+
+    function GetResult() {
+        var calcData = {};
+        calcData.ValueA = $("#ValueA").val();
+        calcData.ValueB = $("#ValueB").val();
+        calcData.Operation = $("#Operation").val();
+        calcData.ReturnInteger = $("#checkBox").val();
+
+        console.log(calcData.ValueA + " " + calcData.Operation + " " + calcData.ValueB);
+        $.ajax({
+            type: 'POST',
+            url: '/Home/Calculate',
+            data: calcData,
+            success: function (r) {
+                calc.clear();
+                calc.currentValue = r.toString();
+                calc.update();
+                TriggerChangeOnInput();
+                GetHistoryView();               
+            },
+            error: function () {
+                console.log("chybka");
+            }
+        });
+    }
+    function GetHistoryView() {
+        $.ajax({
+            type: 'GET',
+            url: '/Home/GetPartial',
+            success: function (result){
+                $('#PartialView').html(result);
+            },
+            error: function() {
+                console.log("chybka");
+            }
+        });
+    }
 }

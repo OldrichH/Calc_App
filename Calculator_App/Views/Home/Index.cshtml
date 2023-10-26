@@ -1,54 +1,23 @@
 ﻿@{
-    Calculator c = new Calculator();
-    //var history = ViewBag.History;
     Layout = "~/Views/Shared/_Layout.cshtml";
-    string x = "";
 }
-@*@model IEnumerable<Calculator_App.Models.Calculation>*@
 
-<script src="~/js/script.js" asp-append-version="true" defer></script>
 <script src="~/lib/jquery/dist/jquery.js"></script>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
-@section scripts {
-    <script type="text/javascript" asp-append-version="true" defer>
-        function GetResult() {
-            var calcData = {};
-            calcData.ValueA = $("#ValueA").val();
-            calcData.ValueB = $("#ValueB").val();
-            calcData.Operation = $("#Operation").val();
-            calcData.ReturnInteger = false;
-
-            console.log(calcData.ValueA + " " + calcData.Operation + " " + calcData.ValueB);
-            $.ajax({
-                type: 'GET',
-                url: '/Home/GetPartial',
-                data: calcData,
-                success: function (r) {
-                    console.log(r);
-                    $('#PartialView').html(r);
-                },
-                error: function () {
-                    console.log("chybka");
-                }
-            });
-        }
-    </script>
-}
-
+<script src="~/js/script.js" asp-append-version="true" defer></script>
 
 <div class="container mt-5">
     <div class="container-md row text-center">
         <div class="col-8" id="calcForm">
             <h1 class="mt-5">Calculator</h1>
             <form class="m-5" id="formCalculator">
-                <!-- asp-controller="Home" asp-action="Index"-->
                 <div class="container mt-5" style="text-align: left;">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" Id="checkBox">
                         <label class="form-check-label" for="flexCheckDefault">
                             Vrátit celé číslo
                         </label>
-                </div>                   
+                    </div>                   
                 </div>
                 <div class="container mt-2"> 
                         <div class ="output">
@@ -134,19 +103,17 @@
                         </div>
                     </div>
                 </div>
-            </form>
-            
+            </form>           
         </div>
         <div class="col-4" id="history">
             <div class="container">
                 <h1 class="mt-5 mb-3">History</h1>
-                <partial id="PartialView">
-                        @Html.Partial("_HistoryViewPartial");
-                </partial>
+                <div id="PartialView">
+                        @*@Html.Partial("_HistoryViewPartial");*@
+                        <partial name="_HistoryViewPartial" />
+                </div>
             </div>
         </div>
-        
-
     </div>
 </div>
 
