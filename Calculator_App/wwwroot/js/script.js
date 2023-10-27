@@ -109,12 +109,13 @@
         calcData.Operation = $("#Operation").val();
         calcData.ReturnInteger = $("#checkBox").val();
 
-        console.log(calcData.ValueA + " " + calcData.Operation + " " + calcData.ValueB);
+        //console.log(calcData.ValueA + " " + calcData.Operation + " " + calcData.ValueB);
         $.ajax({
             type: 'POST',
             url: '/Home/Calculate',
             data: calcData,
             success: function (r) {
+                console.log(r);
                 calc.clear();
                 calc.currentValue = r.toString();
                 calc.update();

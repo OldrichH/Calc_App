@@ -52,7 +52,7 @@ namespace Calculator_App.Controllers
             };
             this.Repository.CreateRecord(calc);
 
-            return Json(result);
+            return Json(result.ToString());
 
         }
 
